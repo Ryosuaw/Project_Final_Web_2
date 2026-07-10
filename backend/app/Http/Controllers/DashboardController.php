@@ -10,7 +10,8 @@ class DashboardController extends Controller
     public function index()
     {
         // Ambil data user yang sedang login.
-        $user = DB::table('users')->where('id', auth()->id())->first();
+        $userId = auth()->Id() ?? 2; // sementara buat testing tanpa login
+$user = DB::table('users')->where('id', $userId)->first();
 
         // Hitung jumlah skill aktif milik user (yang tipe "teach")
         $skillAktifCount = DB::table('user_skills')
@@ -84,16 +85,22 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        return view('dashboard', compact(
-            'user',
-            'skillAktifCount',
-            'partnerRequestCount',
-            'savedOpportunityCount',
-            'matchRate',
-            'opportunities',
-            'partnerRequests',
-            'mySkills',
-            'activities'
-        ));
+      $data = compact(
+    'user',
+    'skillAktifCount',
+    'partnerRequestCount',
+    'savedOpportunityCount',
+    'matchRate',
+    'opportunities',
+    'partnerRequests',
+    'mySkills',
+    'activities'
+);
+
+if (request()->wantsJson()) {
+    return response()->json($data);
+}
+
+return view('dashboard', $data);
     }
 }
