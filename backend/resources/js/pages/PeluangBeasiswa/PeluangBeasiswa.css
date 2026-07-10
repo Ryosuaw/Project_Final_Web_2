@@ -1,0 +1,100 @@
+/* === PELUANG BEASISWA PAGE === */
+.beasiswa-page .peluang-grid-full {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.beasiswa-hero {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  border-radius: 16px;
+  padding: 32px;
+  color: #fff;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.beasiswa-hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.beasiswa-hero h2 {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.beasiswa-hero p {
+  font-size: 14px;
+  opacity: 0.85;
+  line-height: 1.6;
+  max-width: 500px;
+}
+
+.beasiswa-hero .hero-stats {
+  display: flex;
+  gap: 24px;
+  margin-top: 16px;
+}
+
+.beasiswa-hero .hero-stat {
+  text-align: center;
+}
+
+.beasiswa-hero .hero-stat .num {
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.beasiswa-hero .hero-stat .lbl {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.beasiswa-hero .hero-icon {
+  font-size: 80px;
+  opacity: 0.2;
+}
+
+.saved-count {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.saved-count strong {
+  color: #2563eb;
+}
+
+@media (max-width: 1100px) {
+  .beasiswa-page .peluang-grid-full {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .beasiswa-page .peluang-grid-full {
+    grid-template-columns: 1fr;
+  }
+  .beasiswa-hero {
+    flex-direction: column;
+    text-align: center;
+  }
+  .beasiswa-hero .hero-stats {
+    justify-content: center;
+  }
+}

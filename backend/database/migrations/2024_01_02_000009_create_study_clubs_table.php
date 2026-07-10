@@ -1,0 +1,28 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Grup belajar / study club, sesuai fitur "Daftar Study Club" dan
+     * "Gabung grup belajar dan tukar ilmu mingguan bareng mentor mahasiswa".
+     */
+    public function up(): void
+    {
+        Schema::create('study_clubs', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('study_clubs');
+    }
+};
