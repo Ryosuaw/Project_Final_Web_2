@@ -1,0 +1,1942 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - NOERA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Color System - LCH inspired */
+            --gray-50: #fafafa;
+            --gray-100: #f5f5f5;
+            --gray-200: #e5e5e5;
+            --gray-300: #d4d4d4;
+            --gray-400: #a3a3a3;
+            --gray-500: #737373;
+            --gray-600: #525252;
+            --gray-700: #404040;
+            --gray-800: #262626;
+            --gray-900: #171717;
+            
+            --primary: #0066ff;
+            --primary-dark: #0052cc;
+            --primary-light: #e6f0ff;
+            
+            --success: #10b981;
+            --success-bg: #ecfdf5;
+            --warning: #f59e0b;
+            --warning-bg: #fffbeb;
+            --error: #ef4444;
+            
+            /* Surfaces */
+            --surface: #ffffff;
+            --surface-elevated: #ffffff;
+            --surface-overlay: rgba(255, 255, 255, 0.8);
+            
+            /* Borders */
+            --border-default: rgba(0, 0, 0, 0.08);
+            --border-subtle: rgba(0, 0, 0, 0.04);
+            
+            /* Shadows - Multi-layered for depth */
+            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+            
+            /* Typography */
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-display: 'Inter Display', 'Inter', sans-serif;
+            
+            /* Spacing */
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            --space-10: 40px;
+            --space-12: 48px;
+            
+            /* Radius */
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--gray-50);
+            color: var(--gray-900);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Navbar - Minimal & Functional */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border-default);
+            display: flex;
+            align-items: center;
+            padding: 0 var(--space-6);
+            z-index: 100;
+            gap: var(--space-6);
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            min-width: 220px;
+        }
+
+        .navbar-logo {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            font-family: var(--font-display);
+        }
+
+        .navbar-brand-text {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gray-900);
+            letter-spacing: -0.02em;
+        }
+
+        .navbar-search {
+            flex: 1;
+            max-width: 480px;
+            position: relative;
+        }
+
+        .navbar-search input {
+            width: 100%;
+            height: 36px;
+            padding: 0 var(--space-4) 0 var(--space-10);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            background: var(--gray-50);
+            color: var(--gray-900);
+            transition: all 0.15s ease;
+            font-family: var(--font-sans);
+        }
+
+        .navbar-search input:hover {
+            background: var(--surface);
+            border-color: var(--gray-300);
+        }
+
+        .navbar-search input:focus {
+            outline: none;
+            background: var(--surface);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        .navbar-search input::placeholder {
+            color: var(--gray-500);
+        }
+
+        .navbar-search svg {
+            position: absolute;
+            left: var(--space-3);
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            color: var(--gray-400);
+        }
+
+        .navbar-search kbd {
+            position: absolute;
+            right: var(--space-3);
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 2px 6px;
+            background: var(--surface);
+            border: 1px solid var(--border-default);
+            border-radius: 4px;
+            font-size: 11px;
+            color: var(--gray-500);
+            font-family: var(--font-sans);
+            font-weight: 500;
+        }
+
+        .navbar-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-left: auto;
+        }
+
+        .nav-icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-md);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-600);
+            position: relative;
+            transition: all 0.1s ease;
+        }
+
+        .nav-icon-btn:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+
+        .nav-icon-btn:active {
+            transform: scale(0.96);
+        }
+
+        .nav-icon-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .badge-notification {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 7px;
+            height: 7px;
+            background: var(--error);
+            border-radius: 50%;
+            border: 1.5px solid var(--surface);
+        }
+
+        .badge-count {
+            position: absolute;
+            top: 3px;
+            right: 2px;
+            min-width: 17px;
+            height: 17px;
+            background: var(--error);
+            border-radius: 10px;
+            border: 2px solid var(--surface);
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            line-height: 1;
+        }
+
+        .navbar-user {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: background 0.1s ease;
+            margin-left: var(--space-2);
+            border: 1px solid transparent;
+        }
+
+        .navbar-user:hover {
+            background: var(--gray-50);
+            border-color: var(--border-default);
+        }
+
+        .navbar-user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--gray-200);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .navbar-user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .navbar-user-info {
+            line-height: 1.3;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .navbar-user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-900);
+            letter-spacing: -0.01em;
+        }
+
+        .navbar-user-role {
+            font-size: 11px;
+            color: var(--gray-500);
+            font-weight: 500;
+        }
+
+        .navbar-user-arrow {
+            color: var(--gray-400);
+            margin-left: var(--space-1);
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Layout */
+        .layout {
+            display: flex;
+            margin-top: 56px;
+            min-height: calc(100vh - 56px);
+        }
+
+        /* Sidebar - Condensed & Functional */
+        .sidebar {
+            width: 232px;
+            background: var(--surface);
+            border-right: 1px solid var(--border-default);
+            padding: var(--space-4) 0;
+            position: fixed;
+            height: calc(100vh - 56px);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-section {
+            margin-bottom: var(--space-6);
+        }
+
+        .sidebar-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--gray-500);
+            padding: 0 var(--space-4);
+            margin-bottom: var(--space-2);
+            font-weight: 600;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li a {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-2) var(--space-4);
+            margin: 0 var(--space-2);
+            border-radius: var(--radius-md);
+            color: var(--gray-700);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.1s ease;
+            position: relative;
+        }
+
+        .sidebar-nav li a:hover {
+            background: var(--gray-50);
+            color: var(--gray-900);
+        }
+
+        .sidebar-nav li a.active {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .sidebar-nav li a.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 0 2px 2px 0;
+        }
+
+        .sidebar-nav li a svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-badge {
+            margin-left: auto;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 7px;
+            border-radius: 10px;
+            line-height: 1.4;
+        }
+
+        .sidebar-badge-new {
+            background: var(--gray-900);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+        }
+
+        .sidebar-badge-count {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .sidebar-promo {
+            margin: 0 var(--space-3) var(--space-4);
+            padding: var(--space-5);
+            background: linear-gradient(135deg, var(--primary-light) 0%, #dbeafe 100%);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(0, 102, 255, 0.15);
+        }
+
+        .sidebar-promo-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: var(--space-2);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-family: var(--font-display);
+        }
+
+        .sidebar-promo-desc {
+            font-size: 12px;
+            color: var(--gray-700);
+            line-height: 1.5;
+            margin-bottom: var(--space-3);
+        }
+
+        .sidebar-promo-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-4);
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            font-weight: 600;
+        }
+
+        .sidebar-promo-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            border-top: 1px solid var(--border-default);
+            padding-top: var(--space-4);
+        }
+
+        .sidebar-bottom a {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-2) var(--space-4);
+            margin: 0 var(--space-2);
+            border-radius: var(--radius-md);
+            color: var(--gray-700);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.1s ease;
+        }
+
+        .sidebar-bottom a:hover {
+            background: var(--gray-50);
+            color: var(--gray-900);
+        }
+
+        .sidebar-bottom .logout {
+            color: var(--warning);
+        }
+
+        .sidebar-bottom .logout:hover {
+            background: var(--warning-bg);
+        }
+
+        .sidebar-bottom a svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            margin-left: 232px;
+            padding: var(--space-8);
+            max-width: 1400px;
+        }
+
+        /* Page Header */
+        .page-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: var(--space-8);
+            gap: var(--space-6);
+        }
+
+        .page-header-content h1 {
+            font-family: var(--font-display);
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: var(--space-2);
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+        }
+
+        .page-header-content p {
+            font-size: 14px;
+            color: var(--gray-600);
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
+        .page-actions {
+            display: flex;
+            gap: var(--space-3);
+            flex-shrink: 0;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.1s ease;
+            text-decoration: none;
+            font-family: var(--font-sans);
+            white-space: nowrap;
+            height: 36px;
+        }
+
+        .btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: var(--gray-900);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-800);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--gray-700);
+            border: 1px solid var(--border-default);
+        }
+
+        .btn-ghost:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-300);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-4);
+            margin-bottom: var(--space-8);
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            transition: all 0.15s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--gray-200);
+            transform: translateY(-2px);
+        }
+
+        .stat-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .stat-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .stat-icon-blue {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .stat-icon-green {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+
+        .stat-icon-purple {
+            background: #f3f0ff;
+            color: #7c3aed;
+        }
+
+        .stat-icon-orange {
+            background: var(--warning-bg);
+            color: var(--warning);
+        }
+
+        .stat-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .stat-value {
+            font-family: var(--font-display);
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--gray-900);
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            margin-bottom: 2px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: var(--space-6);
+        }
+
+        .content-main {
+            min-width: 0;
+        }
+
+        /* Section Card */
+        .section-card {
+            background: var(--surface);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            margin-bottom: var(--space-6);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-5);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--gray-900);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            letter-spacing: -0.01em;
+        }
+
+        .section-title svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .section-link {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+            transition: color 0.1s ease;
+        }
+
+        .section-link:hover {
+            color: var(--primary-dark);
+        }
+
+        /* Opportunity Cards */
+        .opp-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-4);
+        }
+
+        .opp-card {
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+            transition: all 0.15s ease;
+            position: relative;
+            background: var(--surface);
+        }
+
+        .opp-card:hover {
+            box-shadow: var(--shadow-lg);
+            border-color: var(--gray-200);
+            transform: translateY(-2px);
+        }
+
+        .opp-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: var(--space-3);
+        }
+
+        .opp-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            font-weight: 600;
+        }
+
+        .opp-tag-beasiswa {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .opp-tag-kompetisi {
+            background: #ffedd5;
+            color: #c2410c;
+        }
+
+        .opp-tag-seminar {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .opp-tag svg {
+            width: 12px;
+            height: 12px;
+            stroke-width: 2.5;
+        }
+
+        .opp-bookmark {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-default);
+            background: var(--surface);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-400);
+            transition: all 0.1s ease;
+        }
+
+        .opp-bookmark:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .opp-bookmark svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .opp-title {
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: var(--space-2);
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+        }
+
+        .opp-org {
+            font-size: 13px;
+            color: var(--gray-600);
+            margin-bottom: var(--space-3);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 500;
+        }
+
+        .opp-org svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .opp-tags {
+            display: flex;
+            gap: 6px;
+            margin-bottom: var(--space-4);
+            flex-wrap: wrap;
+        }
+
+        .opp-tag-sm {
+            padding: 4px 9px;
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .opp-meta {
+            display: flex;
+            justify-content: space-between;
+            padding-top: var(--space-4);
+            border-top: 1px solid var(--border-subtle);
+            margin-bottom: var(--space-4);
+        }
+
+        .opp-meta-item label {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--gray-500);
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .opp-meta-item span {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .opp-meta-item .deadline {
+            color: var(--warning);
+            font-weight: 700;
+        }
+
+        .opp-meta-item .benefit {
+            color: var(--success);
+        }
+
+        /* Partner Cards */
+        .partner-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-4);
+        }
+
+        .partner-card {
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+            transition: all 0.15s ease;
+            background: var(--surface);
+        }
+
+        .partner-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--gray-200);
+        }
+
+        .partner-header {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-3);
+            margin-bottom: var(--space-4);
+        }
+
+        .partner-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--gray-200);
+            overflow: hidden;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .partner-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .partner-online {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 11px;
+            height: 11px;
+            background: var(--success);
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .partner-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .partner-name {
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--gray-900);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 2px;
+            letter-spacing: -0.01em;
+        }
+
+        .partner-verified {
+            color: var(--primary);
+        }
+
+        .partner-verified svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .partner-role {
+            font-size: 13px;
+            color: var(--gray-600);
+            margin-bottom: 2px;
+            font-weight: 500;
+        }
+
+        .partner-location {
+            font-size: 12px;
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+
+        .partner-location svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .partner-match {
+            padding: 6px 12px;
+            background: var(--success-bg);
+            border: 1px solid #a7f3d0;
+            border-radius: var(--radius-md);
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .partner-match-value {
+            font-family: var(--font-display);
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--success);
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        .partner-match-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--success);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .partner-quote {
+            font-size: 13px;
+            color: var(--gray-700);
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+            padding: var(--space-3) var(--space-4);
+            margin-bottom: var(--space-4);
+            line-height: 1.5;
+            font-style: normal;
+            border-left: 3px solid var(--primary);
+        }
+
+        .partner-skills-section {
+            margin-bottom: var(--space-3);
+        }
+
+        .partner-skills-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-2);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 600;
+        }
+
+        .partner-skills-label.teach {
+            color: var(--success);
+        }
+
+        .partner-skills-label.learn {
+            color: var(--warning);
+        }
+
+        .partner-skills-label svg {
+            width: 14px;
+            height: 14px;
+            stroke-width: 2.5;
+        }
+
+        .partner-skill-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .partner-skill-tag {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .partner-skill-tag.teach {
+            background: var(--success-bg);
+            color: var(--success);
+            border: 1px solid #a7f3d0;
+        }
+
+        .partner-skill-tag.learn {
+            background: var(--warning-bg);
+            color: var(--warning);
+            border: 1px solid #fcd34d;
+        }
+
+        .partner-actions {
+            display: flex;
+            gap: var(--space-2);
+            margin-top: var(--space-4);
+        }
+
+        .partner-actions .btn {
+            flex: 1;
+            justify-content: center;
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* Right Sidebar */
+        .sidebar-right {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-5);
+        }
+
+        .profile-card {
+            background: var(--surface);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+        }
+
+        .profile-card-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            margin-bottom: var(--space-5);
+        }
+
+        .profile-card-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--gray-200);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .profile-card-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-card-name {
+            font-family: var(--font-display);
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 2px;
+            letter-spacing: -0.01em;
+        }
+
+        .profile-card-role {
+            font-size: 13px;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        .profile-card-verified {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: var(--primary);
+            font-weight: 600;
+            margin-top: 3px;
+        }
+
+        .profile-card-verified svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .profile-progress {
+            margin-bottom: var(--space-5);
+        }
+
+        .profile-progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-2);
+        }
+
+        .profile-progress-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .profile-progress-value {
+            font-family: var(--font-display);
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--success);
+            letter-spacing: -0.01em;
+        }
+
+        .profile-progress-bar {
+            height: 6px;
+            background: var(--gray-100);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: var(--space-2);
+        }
+
+        .profile-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), #34d399);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .profile-progress-hint {
+            font-size: 12px;
+            color: var(--gray-500);
+            line-height: 1.4;
+        }
+
+        .profile-skills {
+            margin-bottom: var(--space-5);
+        }
+
+        .profile-skills-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--gray-500);
+            margin-bottom: var(--space-3);
+        }
+
+        .profile-skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: var(--space-3);
+        }
+
+        .profile-skill-tag {
+            padding: 5px 11px;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid rgba(0, 102, 255, 0.15);
+        }
+
+        .profile-skill-add {
+            padding: 5px 11px;
+            background: var(--gray-100);
+            color: var(--gray-600);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px dashed var(--gray-300);
+            transition: all 0.1s ease;
+        }
+
+        .profile-skill-add:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        /* Activity Card */
+        .activity-card {
+            background: var(--surface);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+        }
+
+        .activity-title {
+            font-family: var(--font-display);
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: var(--space-5);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            letter-spacing: -0.01em;
+        }
+
+        .activity-title svg {
+            width: 20px;
+            height: 20px;
+            color: var(--purple);
+        }
+
+        .activity-list {
+            list-style: none;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: var(--space-3);
+            padding: var(--space-3) 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .activity-item:first-child {
+            padding-top: 0;
+        }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .activity-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .activity-icon-blue {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .activity-icon-purple {
+            background: #f3f0ff;
+            color: #7c3aed;
+        }
+
+        .activity-icon-orange {
+            background: var(--warning-bg);
+            color: var(--warning);
+        }
+
+        .activity-icon-green {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+
+        .activity-text {
+            font-size: 13px;
+            color: var(--gray-800);
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-top: 2px;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 1280px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .sidebar-right {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .opp-grid {
+                grid-template-columns: 1fr;
+            }
+            .partner-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .main {
+                margin-left: 0;
+                padding: var(--space-5);
+            }
+            .navbar-brand-text {
+                display: none;
+            }
+            .navbar-search {
+                max-width: 200px;
+            }
+            .page-header {
+                flex-direction: column;
+            }
+            .sidebar-right {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <div class="navbar-logo">N</div>
+            <div class="navbar-brand-text">NOERA</div>
+        </div>
+
+        <div class="navbar-search">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input type="text" placeholder='Cari mahasiswa, skill ("React", "UI Design")...'>
+            <kbd>⌘K</kbd>
+        </div>
+
+        <div class="navbar-actions">
+            <button class="nav-icon-btn" title="Notifikasi">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                <span class="badge-notification"></span>
+            </button>
+            <button class="nav-icon-btn" title="Pesan">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5c-.512 0-1.024.195-1.414.586L13 16.414a2 2 0 01-2.828 0L9.586 15.586A2 2 0 008.172 15z"/></svg>
+                <span class="badge-count">3</span>
+            </button>
+            <div class="navbar-user">
+                <div class="navbar-user-avatar">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop&crop=face" alt="Kakak Cica">
+                </div>
+                <div class="navbar-user-info">
+                    <div class="navbar-user-name">Kakak Cica</div>
+                    <div class="navbar-user-role">Teknik Informatika</div>
+                </div>
+                <svg class="navbar-user-arrow" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </div>
+        </div>
+    </nav>
+
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Main Menu</div>
+                <ul class="sidebar-nav">
+                    <li>
+                        <a href="#" class="active">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            Skill Exchange
+                            <span class="sidebar-badge sidebar-badge-new">New</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+                            Peluang Beasiswa
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                            Info Kompetisi
+                            <span class="sidebar-badge sidebar-badge-count">12</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                            Seminar & Webinar
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                            Study Club
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-promo">
+                <div class="sidebar-promo-title">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Daftar Study Club
+                </div>
+                <p class="sidebar-promo-desc">Gabung grup belajar dan tukar ilmu mingguan bareng mentor mahasiswa.</p>
+                <button class="sidebar-promo-btn">Explore Groups →</button>
+            </div>
+
+            <div class="sidebar-bottom">
+                <a href="#">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Pengaturan Akun
+                </a>
+                <a href="#" class="logout">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                    Keluar Sesi
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="page-header-content">
+                    <h1>Selamat datang kembali, Kakak Cica!</h1>
+                    <p>Ada 3 partner request baru & 5 peluang yang cocok dengan skill kamu hari ini.</p>
+                </div>
+                <div class="page-actions">
+                    <button class="btn btn-secondary">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        Cari Partner
+                    </button>
+                    <button class="btn btn-primary">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+                        Lihat Peluang
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon-blue">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value">6</div>
+                        <div class="stat-label">Skill Aktif</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon-green">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">Partner Requests</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon-purple">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Peluang Disimpan</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon-orange">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value">91%</div>
+                        <div class="stat-label">Match Rate</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-main">
+                    <!-- Peluang Terbaru -->
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2 class="section-title">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--warning);"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                                Peluang Terbaru Untukmu
+                            </h2>
+                            <a href="#" class="section-link">Lihat Semua →</a>
+                        </div>
+
+                        <div class="opp-grid">
+                            <!-- Beasiswa -->
+                            <div class="opp-card">
+                                <div class="opp-card-header">
+                                    <span class="opp-tag opp-tag-beasiswa">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/></svg>
+                                        Beasiswa
+                                    </span>
+                                    <button class="opp-bookmark">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+                                    </button>
+                                </div>
+                                <h3 class="opp-title">Djarum Beasiswa Plus 2025/2026</h3>
+                                <div class="opp-org">
+                                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                                    Djarum Foundation
+                                </div>
+                                <div class="opp-tags">
+                                    <span class="opp-tag-sm">S1 / D4</span>
+                                    <span class="opp-tag-sm">Prestasi</span>
+                                </div>
+                                <div class="opp-meta">
+                                    <div class="opp-meta-item">
+                                        <label>Deadline</label>
+                                        <span class="deadline">28 Mei 2025</span>
+                                    </div>
+                                    <div class="opp-meta-item">
+                                        <label>Benefit</label>
+                                        <span class="benefit">Rp 1.5M/Bulan</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" style="width: 100%; justify-content: center;">Lihat Detail</button>
+                            </div>
+
+                            <!-- Kompetisi -->
+                            <div class="opp-card">
+                                <div class="opp-card-header">
+                                    <span class="opp-tag opp-tag-kompetisi">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                                        Kompetisi
+                                    </span>
+                                    <button class="opp-bookmark">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+                                    </button>
+                                </div>
+                                <h3 class="opp-title">National UX Design Challenge 2025</h3>
+                                <div class="opp-org">
+                                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                                    HMTI UI
+                                </div>
+                                <div class="opp-tags">
+                                    <span class="opp-tag-sm">Tim</span>
+                                    <span class="opp-tag-sm">Design</span>
+                                </div>
+                                <div class="opp-meta">
+                                    <div class="opp-meta-item">
+                                        <label>Deadline</label>
+                                        <span class="deadline">10 Apr 2025</span>
+                                    </div>
+                                    <div class="opp-meta-item">
+                                        <label>Benefit</label>
+                                        <span class="benefit">Total Rp 15 Juta</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" style="width: 100%; justify-content: center;">Lihat Detail</button>
+                            </div>
+
+                            <!-- Seminar -->
+                            <div class="opp-card">
+                                <div class="opp-card-header">
+                                    <span class="opp-tag opp-tag-seminar">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                                        Seminar
+                                    </span>
+                                    <button class="opp-bookmark">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+                                    </button>
+                                </div>
+                                <h3 class="opp-title">Webinar: Flutter UI Slicing Pro</h3>
+                                <div class="opp-org">
+                                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                                    NOERA Study Club
+                                </div>
+                                <div class="opp-tags">
+                                    <span class="opp-tag-sm">Flutter</span>
+                                    <span class="opp-tag-sm">Online</span>
+                                </div>
+                                <div class="opp-meta">
+                                    <div class="opp-meta-item">
+                                        <label>Deadline</label>
+                                        <span class="deadline">12 Mar 2025</span>
+                                    </div>
+                                    <div class="opp-meta-item">
+                                        <label>Benefit</label>
+                                        <span class="benefit">E-Sertifikat</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" style="width: 100%; justify-content: center;">Lihat Detail</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Partner Terbaik -->
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2 class="section-title">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--primary);"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                Partner Terbaik Untukmu
+                            </h2>
+                            <a href="#" class="section-link">Skill Exchange →</a>
+                        </div>
+
+                        <div class="partner-grid">
+                            <!-- Amanda -->
+                            <div class="partner-card">
+                                <div class="partner-header">
+                                    <div class="partner-avatar">
+                                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face" alt="Amanda Putri">
+                                        <span class="partner-online"></span>
+                                    </div>
+                                    <div class="partner-info">
+                                        <div class="partner-name">
+                                            Amanda Putri
+                                            <span class="partner-verified">
+                                                <svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                                            </span>
+                                        </div>
+                                        <div class="partner-role">Teknik Informatika</div>
+                                        <div class="partner-location">
+                                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                            Institut Teknologi Bandung
+                                        </div>
+                                    </div>
+                                    <div class="partner-match">
+                                        <div class="partner-match-value">95%</div>
+                                        <div class="partner-match-label">Match</div>
+                                    </div>
+                                </div>
+
+                                <div class="partner-quote">"Mau buat aplikasi mobile untuk portfolio beasiswa. Butuh partner Flutter."</div>
+
+                                <div class="partner-skills-section">
+                                    <div class="partner-skills-label teach">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                                        BISA MENGAJARI
+                                    </div>
+                                    <div class="partner-skill-tags">
+                                        <span class="partner-skill-tag teach">Laravel Backend</span>
+                                        <span class="partner-skill-tag teach">REST API</span>
+                                    </div>
+                                </div>
+
+                                <div class="partner-skills-section">
+                                    <div class="partner-skills-label learn">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                                        INGIN BELAJAR
+                                    </div>
+                                    <div class="partner-skill-tags">
+                                        <span class="partner-skill-tag learn">Flutter</span>
+                                    </div>
+                                </div>
+
+                                <div class="partner-actions">
+                                    <button class="btn btn-primary">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                                        Kirim Request
+                                    </button>
+                                    <button class="btn btn-ghost btn-icon">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Budi -->
+                            <div class="partner-card">
+                                <div class="partner-header">
+                                    <div class="partner-avatar">
+                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" alt="Budi Santoso">
+                                        <span class="partner-online"></span>
+                                    </div>
+                                    <div class="partner-info">
+                                        <div class="partner-name">
+                                            Budi Santoso
+                                            <span class="partner-verified">
+                                                <svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                                            </span>
+                                        </div>
+                                        <div class="partner-role">Sistem Informasi</div>
+                                        <div class="partner-location">
+                                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                            Universitas Indonesia
+                                        </div>
+                                    </div>
+                                    <div class="partner-match">
+                                        <div class="partner-match-value">98%</div>
+                                        <div class="partner-match-label">Match</div>
+                                    </div>
+                                </div>
+
+                                <div class="partner-quote">"Cari partner untuk lomba UX & bangun MVP. Bisa ajarin design framework."</div>
+
+                                <div class="partner-skills-section">
+                                    <div class="partner-skills-label teach">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                                        BISA MENGAJARI
+                                    </div>
+                                    <div class="partner-skill-tags">
+                                        <span class="partner-skill-tag teach">UI/UX Design</span>
+                                        <span class="partner-skill-tag teach">Figma</span>
+                                    </div>
+                                </div>
+
+                                <div class="partner-skills-section">
+                                    <div class="partner-skills-label learn">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                                        INGIN BELAJAR
+                                    </div>
+                                    <div class="partner-skill-tags">
+                                        <span class="partner-skill-tag learn">React Native</span>
+                                    </div>
+                                </div>
+
+                                <div class="partner-actions">
+                                    <button class="btn btn-primary">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                                        Kirim Request
+                                    </button>
+                                    <button class="btn btn-ghost btn-icon">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar -->
+                <div class="sidebar-right">
+                    <!-- Profile Card -->
+                    <div class="profile-card">
+                        <div class="profile-card-header">
+                            <div class="profile-card-avatar">
+                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face" alt="Kakak Cica">
+                            </div>
+                            <div>
+                                <div class="profile-card-name">Kakak Cica</div>
+                                <div class="profile-card-role">Teknik Informatika — UGM</div>
+                                <div class="profile-card-verified">
+                                    <svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                                    Terverifikasi
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="profile-progress">
+                            <div class="profile-progress-header">
+                                <span class="profile-progress-label">Kelengkapan Profil</span>
+                                <span class="profile-progress-value">72%</span>
+                            </div>
+                            <div class="profile-progress-bar">
+                                <div class="profile-progress-fill" style="width: 72%;"></div>
+                            </div>
+                            <p class="profile-progress-hint">Tambahkan 2 skill lagi untuk match lebih banyak partner.</p>
+                        </div>
+
+                        <div class="profile-skills">
+                            <div class="profile-skills-title">SKILL SAYA</div>
+                            <div class="profile-skill-tags">
+                                <span class="profile-skill-tag">Flutter</span>
+                                <span class="profile-skill-tag">Dart</span>
+                                <span class="profile-skill-tag">Firebase</span>
+                                <span class="profile-skill-tag">Figma Basics</span>
+                                <span class="profile-skill-tag">Python</span>
+                                <span class="profile-skill-tag">Data Analysis</span>
+                                <span class="profile-skill-add">+ Tambah</span>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary" style="width: 100%; justify-content: center;">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                            Edit Profil
+                        </button>
+                    </div>
+
+                    <!-- Activity -->
+                    <div class="activity-card">
+                        <h3 class="activity-title">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                            Aktivitas Terkini
+                        </h3>
+                        <ul class="activity-list">
+                            <li class="activity-item">
+                                <div class="activity-icon activity-icon-blue">
+                                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                </div>
+                                <div>
+                                    <div class="activity-text">Amanda Putri mengirim partner request padamu</div>
+                                    <div class="activity-time">5 menit lalu</div>
+                                </div>
+                            </li>
+                            <li class="activity-item">
+                                <div class="activity-icon activity-icon-purple">
+                                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+                                </div>
+                                <div>
+                                    <div class="activity-text">Kamu menyimpan Beasiswa Unggulan Kemendikbud</div>
+                                    <div class="activity-time">1 jam lalu</div>
+                                </div>
+                            </li>
+                            <li class="activity-item">
+                                <div class="activity-icon activity-icon-orange">
+                                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                </div>
+                                <div>
+                                    <div class="activity-text">Skill "Flutter" berhasil ditambahkan ke profilmu</div>
+                                    <div class="activity-time">3 jam lalu</div>
+                                </div>
+                            </li>
+                            <li class="activity-item">
+                                <div class="activity-icon activity-icon-green">
+                                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                                </div>
+                                <div>
+                                    <div class="activity-text">Webinar Flutter UI Slicing dibuka. Pendaftaran gratis!</div>
+                                    <div class="activity-time">Kemarin</div>
+                                </div>
+                            </li>
+                            <li class="activity-item">
+                                <div class="activity-icon activity-icon-orange">
+                                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                                </div>
+                                <div>
+                                    <div class="activity-text">National UX Design Challenge 2025 baru ditambahkan</div>
+                                    <div class="activity-time">Kemarin</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
